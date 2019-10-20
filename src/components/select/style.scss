@@ -1,16 +1,20 @@
-.option {
-    list-style-type: none;
-    border: 1px solid black;
-    width: 100%;
-    background-color: grey;
-}
-
-.optionList {
-    padding: 0;
-    width: 277px;
-    margin-top: 0;
-}
-
-.selectInput {
-    width: 250px;
-}
+.SELECT {
+    display: inline-block;
+  
+    &__input {
+      width: 250px;
+    }
+    &__options {
+      padding: 0;
+      width: 277px;
+      margin-top: 0;
+  
+      &-option {
+        list-style-type: none;
+        border: 1px solid black;
+        width: 100%;
+        background-color: grey;
+      }
+    }
+  }
+  
