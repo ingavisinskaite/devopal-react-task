@@ -1,11 +1,34 @@
 import React from "react";
 import "./style.scss";
 
-const Select = () => {
-  const base = ["Vanilla", "Van", "Dark chocolate", "White chocolate"];
+const SelectInput = props => {
+  return (
+    <input
+      id="select-input"
+      className="SELECT__input"
+      type="text"
+      placeholder="Select"
+      onClick={props.toggleOptions}
+      onChange={props.showFilteredOptions}
+    ></input>
+  );
+};
+
+const Tag = props => {
+  return (
+    <span>
+      {props.text}
+      <button onClick={props.removeTag}>X</button>
+    </span>
+  );
+};
+
+const Select = props => {
+  let base = ["Vanilla", "Van", "Dark chocolate", "White chocolate"];
   const [options, setOptions] = React.useState([]);
   const [dropdownState, setDropdownState] = React.useState(false);
   const [selectedOption, setSelectedOption] = React.useState("");
+  const [tags, setTags] = React.useState([]);
 
   React.useEffect(() => {
     attachCloseClickHandler();
@@ -16,8 +39,8 @@ const Select = () => {
     const dropdownInput = document.getElementById("select-input");
     if (dropdownState === false) {
       dropdownInput.focus();
-      const allOptions = getLiElementsFromOptions(base);
-      setOptions(allOptions);
+      const availableOptions = base.filter(opt => tags.indexOf(opt) < 0);
+      setOptions(availableOptions);
       dropdownBtn.innerHTML = "/\\";
       setDropdownState(true);
     } else {
@@ -27,24 +50,31 @@ const Select = () => {
     }
   };
 
-  const showFilteredOptions = filter => {
+  const filterOptions = filter => {
+    const leftAvailableOptions = base.filter(opt => tags.indexOf(opt) < 0);
     if (filter !== "") {
       const filterBy = filter[0].toUpperCase() + filter.slice(1);
-      const filteredOptions = base.filter(option =>
+      const filteredOptions = leftAvailableOptions.filter(option =>
         option.startsWith(filterBy)
       );
-      const filteredLiElements = getLiElementsFromOptions(filteredOptions);
-      setOptions(filteredLiElements);
+      setOptions(filteredOptions);
     } else {
-      const allOptions = getLiElementsFromOptions(base);
-      setOptions(allOptions);
+      setOptions(leftAvailableOptions)
     }
+    // else {
+    //   setOptions(base);
+    // }
   };
 
-  const selectOption = option => {
-    setSelectedOption(option);
-    const selectInput = document.getElementById("select-input");
-    selectInput.value = option;
+  const selectOption = (e, option) => {
+    e.preventDefault();
+    if (props.mode === "single") {
+      setSelectedOption(option);
+      const selectInput = document.getElementById("select-input");
+      selectInput.value = option;
+    } else {
+      addTag(option);
+    }
   };
 
   const attachCloseClickHandler = () => {
@@ -57,36 +87,54 @@ const Select = () => {
     });
   };
 
-  const getLiElementsFromOptions = options => {
-    return options.map((option, index) => (
-      <li
-        key={index}
-        className="SELECT__options-option"
-        onClick={e => selectOption(option)}
-      >
-        {option}
-      </li>
-    ));
+  const addTag = text => {
+    setTags(tags => [...tags, text]);
+    const dropdownInput = document.getElementById("select-input");
+    dropdownInput.focus();
+    setOptions(options => options.filter(opt => opt !== text));
+  };
+
+  const removeTag = (tagIndex, tagText) => {
+    setTags(tags.filter((t, index) => index !== tagIndex));
+    setOptions(options => [...options, tagText]);
   };
 
   return (
     <section>
       <div id="select" className="SELECT">
-        <input
-          id="select-input"
-          className="SELECT__input"
-          type="text"
-          placeholder="Select"
-          onClick={e => toggleOptions()}
-          onChange={e => showFilteredOptions(e.target.value)}
-        ></input>
+        {props.mode === "single" ? (
+          <SelectInput
+            toggleOptions={e => toggleOptions()}
+            filterOptions={e => filterOptions(e.target.value)}
+          />
+        ) : (
+            <div>
+              {tags.map((text, index) => (
+                <Tag key={index} text={text} removeTag={e => removeTag(index, text)} />
+              ))}
+              <SelectInput
+                toggleOptions={e => toggleOptions()}
+                showFilteredOptions={e => filterOptions(e.target.value)}
+              />
+            </div>
+          )}
         <button className="dropdownBtn" onClick={e => toggleOptions(e)}>
           V
         </button>
-        <ul className="SELECT__options">{options}</ul>
+
+        <ul className="SELECT__options">{dropdownState && options.map((opt, index) => {
+          return (<li
+            key={index}
+            className="SELECT__options-option"
+            onClick={e => selectOption(e, opt)}
+          >
+            {opt}
+          </li>)
+        })}</ul>
+
       </div>
       <div>
-        <p> {selectedOption}</p>
+        <p>{selectedOption}</p>
       </div>
     </section>
   );
