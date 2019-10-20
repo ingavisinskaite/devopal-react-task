@@ -5,23 +5,25 @@ const SelectInput = React.forwardRef((props, ref) => (
   <input
     id="select-input"
     className={
-      props.mode === "tags" ? "SELECT__tags-input-container__input" : undefined
+      props.mode === "tags"
+        ? "SELECT__input-dropdown__tags-input-container__input"
+        : undefined
     }
     type="text"
     placeholder="Select..."
     onClick={props.toggleOptions}
-    onChange={props.showFilteredOptions}
+    onChange={props.filterOptions}
     ref={ref}
   ></input>
 ));
 
 const Tag = props => {
   return (
-    <div className="SELECT__tags-input-container__tags__tag-container">
-      <span className="SELECT__tags-input-container__tags__tag-container__tag">
+    <div className="SELECT__input-dropdown__tags-input-container__tags__tag-container">
+      <span className="SELECT__input-dropdown__tags-input-container__tags__tag-container__tag">
         {props.text}
         <button
-          className="SELECT__tags-input-container__tags__remove"
+          className="SELECT__input-dropdown__tags-input-container__tags__remove"
           onClick={props.removeTag}
         >
           X
@@ -35,8 +37,8 @@ const Select = props => {
   const allPossibleOptions = props.data;
   const [options, setOptions] = React.useState([]);
   const [dropdownState, setDropdownState] = React.useState(false);
-  const [selectedOption, setSelectedOption] = React.useState("");
-  const [tags, setTags] = React.useState([]);
+  const [selectedOption, setSelectedOption] = React.useState(props.selected);
+  const [tags, setTags] = React.useState(props.selected);
   const selectContainer = React.useRef(null);
   const selectInput = React.useRef(null);
 
@@ -44,6 +46,10 @@ const Select = props => {
     setOptions([]);
     setDropdownState(false);
   };
+
+  React.useEffect(() => {
+    selectInput.current.value = selectedOption;
+  }, [selectedOption]);
 
   React.useEffect(() => {
     const clickHandler = e => {
@@ -87,9 +93,10 @@ const Select = props => {
   };
 
   const filterOptions = filter => {
-    const leftAvailableOptions = allPossibleOptions.filter(
-      opt => tags.indexOf(opt) < 0
-    );
+    const leftAvailableOptions =
+      props.mode === "tags"
+        ? allPossibleOptions.filter(opt => tags.indexOf(opt) < 0)
+        : allPossibleOptions;
     if (filter !== "") {
       const filterBy = filter[0].toUpperCase() + filter.slice(1);
       const filteredOptions = leftAvailableOptions.filter(option =>
@@ -105,7 +112,6 @@ const Select = props => {
     e.preventDefault();
     if (props.mode === "single") {
       setSelectedOption(option);
-      selectInput.current.value = option;
     } else {
       addTag(option);
     }
@@ -125,46 +131,47 @@ const Select = props => {
   return (
     <section>
       <div ref={selectContainer} className="SELECT">
-        {props.mode === "single" ? (
-          <SelectInput
-            toggleOptions={e => toggleOptions()}
-            filterOptions={e => filterOptions(e.target.value)}
-            mode={props.mode}
-            ref={selectInput}
-          />
-        ) : (
-          <div className="SELECT__tags-input-container">
-            <div className="SELECT__tags-input-container__tags">
-              {tags.map((text, index) => (
-                <Tag
-                  key={index}
-                  text={text}
-                  removeTag={e => removeTag(index, text)}
-                />
-              ))}
-            </div>
+        <div className="SELECT__input-dropdown">
+          {props.mode === "single" ? (
             <SelectInput
               toggleOptions={e => toggleOptions()}
-              showFilteredOptions={e => filterOptions(e.target.value)}
+              filterOptions={e => filterOptions(e.target.value)}
               mode={props.mode}
               ref={selectInput}
             />
-          </div>
-        )}
-        <button
-          className="SELECT__dropdown-button"
-          onClick={e => toggleOptions(e)}
-        >
-          {dropdownState ? "/\\" : "V"}
-        </button>
-
-        <ul className="SELECT__options">
+          ) : (
+            <div className="SELECT__input-dropdown__tags-input-container">
+              <div className="SELECT__input-dropdown__tags-input-container__tags">
+                {tags.map((text, index) => (
+                  <Tag
+                    key={index}
+                    text={text}
+                    removeTag={e => removeTag(index, text)}
+                  />
+                ))}
+              </div>
+              <SelectInput
+                toggleOptions={e => toggleOptions()}
+                filterOptions={e => filterOptions(e.target.value)}
+                mode={props.mode}
+                ref={selectInput}
+              />
+            </div>
+          )}
+          <button
+            className={`SELECT__input-dropdown__dropdown-button-${props.mode}`}
+            onClick={e => toggleOptions(e)}
+          >
+            {dropdownState ? "/\\" : "V"}
+          </button>
+        </div>
+        <ul className={`SELECT__options-${props.mode}`}>
           {dropdownState &&
             options.map((opt, index) => {
               return (
                 <li
                   key={index}
-                  className="SELECT__options-option"
+                  className={`SELECT__options-${props.mode}-option`}
                   onClick={e => selectOption(e, opt)}
                 >
                   {opt}

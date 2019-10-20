@@ -31,6 +31,7 @@ function App() {
              mode="single"
              setSingleSelection={setSingleSelection}
              data={cakeBases}
+             selected={singleSelection}
            />
          )}
        />
@@ -42,6 +43,7 @@ function App() {
              mode="tags"
              setTagsSelection={setTagsSelection}
              data={cakeIngredients}
+             selected={tagsSelection}
            />
          )}
        />

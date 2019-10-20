@@ -1,58 +1,79 @@
 .SELECT {
-  $input-width: 800px;
   display: inline-block;
+  width: 700px;
 
-  &__tags-input-container {
-    width: $input-width;
-    padding: 4px;
-    border: 1px solid #333;
-    display: inline-block;
+  &__input-dropdown {
+    display: flex;
 
-    &__tags {
-      &__tag-container {
-        display: inline-block;
-        margin-top: 8px;
+    &__tags-input-container {
+      width: 100%;
+      padding: 4px;
+      border: 1px solid #333;
+      display: inline-block;
 
-        &__tag {
-          background-color: #C0C0C0;
-          border-radius: 7px;
-          font-size: 0.8em;
-          padding: 3px;
-          margin: 3px;
+      &__tags {
+        &__tag-container {
+          display: inline-block;
+          margin-top: 8px;
+
+          &__tag {
+            background-color: #c0c0c0;
+            border-radius: 7px;
+            font-size: 0.8em;
+            padding: 3px;
+            margin: 3px;
+          }
+        }
+
+        &__remove {
+          border-radius: 45%;
+          background-color: #999999;
+          border: none;
+          margin: 2px;
         }
       }
 
-      &__remove {
-        border-radius: 45%;
-        background-color: #999999;
+      &__input {
         border: none;
-        margin: 2px;
+        width: 100%;
+      }
+
+      &__input:focus {
+        outline: 0;
       }
     }
 
-    &__input {
-      border: none;
-      width: 100%;
-    }
-
-    &__input:focus {
-      outline: 0;
+    &__dropdown-button-tags {
+      width: 5%;
+      display: inline-block;
     }
   }
 
-  &__dropdown-button {
-    height: 34px;
-    display: inline-block;
-    margin-top: 0;
-  }
-
-  &__options {
+  &__options-tags {
     padding: 0;
-    width: $input-width + 41px;
+    width: 100%;
     height: 200px;
     overflow-x: hidden;
     overflow-y: auto;
-    margin-top: 0;
+    margin: 0;
+
+    &-option {
+      list-style-type: none;
+      width: 100%;
+      cursor: pointer;
+      padding: 2px;
+      background-color: #d9d9d9;
+    }
+
+    &-option:hover {
+      background-color: #acacac;
+    }
+  }
+
+  &__options-single {
+    width: 196px;
+    margin: 0;
+    padding: 0;
 
     &-option {
       list-style-type: none;
