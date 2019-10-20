@@ -1,20 +1,44 @@
 .SELECT {
+  // $input-width: 700px;
+  display: inline-block;
+
+  &__tags-input-container {
+    min-width: 700px;
+    border: 1px solid #333;
     display: inline-block;
-  
-    &__input {
-      width: 250px;
-    }
-    &__options {
-      padding: 0;
-      width: 277px;
-      margin-top: 0;
-  
-      &-option {
-        list-style-type: none;
-        border: 1px solid black;
-        width: 100%;
-        background-color: grey;
+
+    &__tags {
+      &-tag {
+        background-color: #C0C0C0;
+        border-radius: 7px;
+        padding: 3px;
       }
     }
+
+    &__input {
+      width: 100%;
+      border: none;
+    }
+
+    &__input:focus {
+      outline: 0;
+    }
   }
-  
+
+  &__dropdown-button {
+
+  }
+
+  &__options {
+    padding: 0;
+    width: 704px;
+    margin-top: 0;
+
+    &-option {
+      list-style-type: none;
+      border: 1px solid black;
+      width: 100%;
+      background-color: grey;
+    }
+  }
+}
