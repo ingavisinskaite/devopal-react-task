@@ -4,9 +4,11 @@ import "./style.scss";
 const SelectInput = React.forwardRef((props, ref) => (
   <input
     id="select-input"
-    className="SELECT__tags-input-container__input"
+    className={
+      props.mode === "tags" ? "SELECT__tags-input-container__input" : undefined
+    }
     type="text"
-    placeholder="Select"
+    placeholder="Select..."
     onClick={props.toggleOptions}
     onChange={props.showFilteredOptions}
     ref={ref}
@@ -15,15 +17,22 @@ const SelectInput = React.forwardRef((props, ref) => (
 
 const Tag = props => {
   return (
-    <span className="SELECT__tags-input-container__tags-tag">
-      {props.text}
-      <button onClick={props.removeTag}>X</button>
-    </span>
+    <div className="SELECT__tags-input-container__tags__tag-container">
+      <span className="SELECT__tags-input-container__tags__tag-container__tag">
+        {props.text}
+        <button
+          className="SELECT__tags-input-container__tags__remove"
+          onClick={props.removeTag}
+        >
+          X
+        </button>
+      </span>
+    </div>
   );
 };
 
 const Select = props => {
-  let base = ["Vanilla", "Van", "Dark chocolate", "White chocolate"];
+  const allPossibleOptions = props.data;
   const [options, setOptions] = React.useState([]);
   const [dropdownState, setDropdownState] = React.useState(false);
   const [selectedOption, setSelectedOption] = React.useState("");
@@ -67,7 +76,9 @@ const Select = props => {
   const toggleOptions = e => {
     if (dropdownState === false) {
       selectInput.current.focus();
-      const availableOptions = base.filter(opt => tags.indexOf(opt) < 0);
+      const availableOptions = allPossibleOptions.filter(
+        opt => tags.indexOf(opt) < 0
+      );
       setOptions(availableOptions);
       setDropdownState(true);
     } else {
@@ -76,7 +87,9 @@ const Select = props => {
   };
 
   const filterOptions = filter => {
-    const leftAvailableOptions = base.filter(opt => tags.indexOf(opt) < 0);
+    const leftAvailableOptions = allPossibleOptions.filter(
+      opt => tags.indexOf(opt) < 0
+    );
     if (filter !== "") {
       const filterBy = filter[0].toUpperCase() + filter.slice(1);
       const filteredOptions = leftAvailableOptions.filter(option =>
@@ -116,6 +129,7 @@ const Select = props => {
           <SelectInput
             toggleOptions={e => toggleOptions()}
             filterOptions={e => filterOptions(e.target.value)}
+            mode={props.mode}
             ref={selectInput}
           />
         ) : (
@@ -132,6 +146,7 @@ const Select = props => {
             <SelectInput
               toggleOptions={e => toggleOptions()}
               showFilteredOptions={e => filterOptions(e.target.value)}
+              mode={props.mode}
               ref={selectInput}
             />
           </div>
@@ -157,9 +172,6 @@ const Select = props => {
               );
             })}
         </ul>
-      </div>
-      <div>
-        <p>{selectedOption}</p>
       </div>
     </section>
   );

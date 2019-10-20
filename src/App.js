@@ -3,6 +3,8 @@ import "./App.css";
 import Select from "./components/select";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Home from "./components/home";
+import cakeBases from './data/cakeBases';
+import cakeIngredients from './data/cakeIngredients';
 
 function App() {
  const [singleSelection, setSingleSelection] = React.useState("");
@@ -28,6 +30,7 @@ function App() {
              {...props}
              mode="single"
              setSingleSelection={setSingleSelection}
+             data={cakeBases}
            />
          )}
        />
@@ -38,6 +41,7 @@ function App() {
              {...props}
              mode="tags"
              setTagsSelection={setTagsSelection}
+             data={cakeIngredients}
            />
          )}
        />
