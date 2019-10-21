@@ -51,8 +51,12 @@ const Select = props => {
   };
 
   React.useEffect(() => {
-    selectInput.current.value = selectedOption;
-  }, [selectedOption]);
+    if (props.mode === "single") {
+      selectInput.current.value = selectedOption;
+    } else {
+      selectInput.current.value = "Select...";
+    }
+  }, [selectedOption, props.mode]);
 
   React.useEffect(() => {
     const clickHandler = e => {
