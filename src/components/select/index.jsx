@@ -41,9 +41,12 @@ const Select = props => {
   const [tags, setTags] = React.useState(props.selected);
   const selectContainer = React.useRef(null);
   const selectInput = React.useRef(null);
+  const selectDropdown = React.useRef(null);
 
   const closeSelect = () => {
     setOptions([]);
+    selectDropdown.current.style.boxShadow = "none";
+    selectDropdown.current.style.backgroundColor = "white";
     setDropdownState(false);
   };
 
@@ -86,6 +89,9 @@ const Select = props => {
         opt => tags.indexOf(opt) < 0
       );
       setOptions(availableOptions);
+      selectDropdown.current.style.boxShadow =
+        "1px 2px 6px 0px rgba(125,121,125,1)";
+      selectDropdown.current.style.backgroundColor = "#d9d9d9";
       setDropdownState(true);
     } else {
       closeSelect();
@@ -165,7 +171,7 @@ const Select = props => {
             {dropdownState ? "/\\" : "V"}
           </button>
         </div>
-        <ul className={`SELECT__options-${props.mode}`}>
+        <ul ref={selectDropdown} className={`SELECT__options-${props.mode}`}>
           {dropdownState &&
             options.map((opt, index) => {
               return (

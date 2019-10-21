@@ -1,6 +1,8 @@
 .SELECT {
   display: inline-block;
   width: 700px;
+  margin-left: 15px;
+  margin-top: 10px;
 
   &__input-dropdown {
     display: flex;
@@ -30,6 +32,11 @@
           background-color: #999999;
           border: none;
           margin: 2px;
+          cursor: pointer;
+        }
+
+        &__remove:hover {
+          background-color: #868686;
         }
       }
 
@@ -61,7 +68,7 @@
       list-style-type: none;
       width: 100%;
       cursor: pointer;
-      padding: 2px;
+      padding: 3px;
       background-color: #d9d9d9;
     }
 

@@ -1,10 +1,10 @@
 import React from "react";
+import "./style.scss";
 import { Link } from "react-router-dom";
 
 const Home = props => {
-  console.log(props);
   return (
-    <div>
+    <div className="MAIN">
       <h2>Welcome to Select component!</h2>
       <p>Choose your mode:</p>
       <div>
